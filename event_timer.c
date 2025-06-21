@@ -33,6 +33,7 @@
 #include <event_timer.h>
 #include <time.h>
 #include <min_heap.h>
+
 MinHeap* heap = NULL;
 struct timespec global_ts;
 

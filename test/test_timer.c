@@ -1,3 +1,10 @@
+/*
+ * File : test.c
+ * Purpose : Sample test code for timer library/
+ * Author  :Pradeep Kumar Munakala
+ * License : MIT (See license file for full license text.)
+ *
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/epoll.h>
@@ -10,10 +17,10 @@ event_timer_watch_t event_tm1[10];
 event_timer_watch_t event_tm[10];
 void timer_cb (void *data) {
     struct timespec ts;
-    printf("Timer expiryt %p \n", data);
+    printf("Timer expiry %p \n", data);
     // CLOCK_MONOTONIC - time since boot (not affected by system time changes)
     if (clock_gettime(CLOCK_MONOTONIC, &ts) == 0) {
-//        printf("CLOCK_MONOTONIC: %ld.%09ld seconds\n", ts.tv_sec, ts.tv_nsec);
+        printf("CLOCK_MONOTONIC: %ld.%09ld seconds\n", ts.tv_sec, ts.tv_nsec);
     } else {
         perror("clock_gettime (MONOTONIC)");
     }
@@ -24,10 +31,10 @@ int main() {
     // Nothing is added to the epoll set (it's empty)
     int i = 0;
     printf("Waiting for 3 seconds using epoll_wait() with no fds...\n");
-	 for (i = 0; i < 10; i++) {
-		  event_timer_init(&event_tm[i], timer_cb, 3000, 5000);
-		  event_timer_start(&event_tm[i]);
-	 }
+    for (i = 0; i < 10; i++) {
+	    event_timer_init(&event_tm[i], timer_cb, 3000, 5000);
+	    event_timer_start(&event_tm[i]);
+    }
 
     // epoll_wait with timeout = 3000 ms (3 seconds)
     event_main_loop();
