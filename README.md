@@ -40,9 +40,12 @@ A lightweight, scalable event timer library in C using **epoll** and a **min-hea
 	•	C standard library
 	•	No third-party libraries required
 
-🛠 Build Instructions
+🛠 Build and Run
 
-make 
+make
+
+export LD_LIBRARY_PATH=./
+./DemoApp 
 
 👤 Author : Pradeep Munakala
 Feel free to fork, use, and contribute!
