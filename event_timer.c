@@ -66,8 +66,14 @@ int64_t compute_diff_millisecs (struct timespec *ev_ts, struct timespec *now)
     int64_t sec_diff = ev_ts->tv_sec - now->tv_sec;
     int64_t nsec_diff = ev_ts->tv_nsec - now->tv_nsec;
     if (sec_diff < 0 ) sec_diff = 0;
-    if (nsec_diff < 0) nsec_diff = 0;
-    if (!sec_diff &&  !nsec_diff) return 1; 
+    if (nsec_diff < 0) {
+	sec_diff -= 1;
+        nsec_diff += 1000000000L;
+    }
+   
+    if (sec_diff <  0) 
+	return 0; 
+
     return (sec_diff * 1000) + (nsec_diff / 1000000);
 }
 
@@ -126,7 +132,7 @@ int event_main_loop (void) {
                     if (timespec_cmp(&((event_timer_watch_t *)item.data)->event_ts,
                               &global_ts) > 0) {
 			timeout_ms = compute_diff_millisecs(&((event_timer_watch_t *)item.data)->event_ts, &global_ts);
-			//printf("Next timeout %ld\n", timeout_ms);
+			printf("Next timeout %ld\n", timeout_ms);
                         break;
                     }
 
