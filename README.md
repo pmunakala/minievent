@@ -1,31 +1,52 @@
-# minievent
-# Event Timer Library in C
+# 🕒 Event Timer Library in C
 
-This project implements a scalable **event timer system** in C using:
+A lightweight, scalable event timer library in C using **epoll** and a **min-heap**. Ideal for applications that require high-performance timer management without relying on `timerfd` or external dependencies.
 
-- **`epoll`** for non-blocking event polling
-- **Min-heap** for efficient timer scheduling
-- **Monotonic clock** to ensure accurate timing, immune to system clock changes
-
----
-
-## 🔧 Features
+## ✨ Features
 
 - One-shot and repeating timers
-- Millisecond-precision scheduling
-- Efficient O(log n) timer insertion and O(1) timer expiry check using a min-heap
-- Non-blocking event loop using `epoll`
-- Simple API for initializing, starting, and restarting timers
+- Millisecond precision
+- Efficient scheduling with a min-heap (O(log n))
+- Non-blocking event loop with `epoll`
+- Clean and modular C interface
+
+
+## 📁 Project Structure
+├── event_timer.c       # Timer implementation
+├── event_timer.h       # Timer interface
+├── minheap.c           # Min-heap implementation
+├── minheap.h           # Min-heap interface
+├── main.c              # Sample usage/test
+└── README.md           # Project documentation
 
 ---
 
-## 📦 Project Structure
+## 🧩 API Usage
 
-```bash
-.
-├── event_timer.c          # Timer implementation
-├── event_timer.h          # Timer API definitions
-├── min_heap.c             # Min-heap implementation
-├── min_heap.h             # Heap interface
-├── test/test.c            # Sample usage/test
-└── README.md              # This file
+### 1. Define a timer callback
+    void my_callback(void *data) {
+    printf("Timer fired!\n");
+    }
+
+### 2. create and start time
+    event_timer_watch_t timer;
+    event_timer_init(&timer,    my_callback, 1000, 0);  // One-shot timer
+    event_timer_start(&timer);
+### 3. Run the event loop
+    event_main_loop();  // Blocking loop that dispatches timers
+
+ 📦 Dependencies
+	•	Linux (uses epoll and clock_gettime)
+	•	C standard library
+	•	No third-party libraries required
+
+🛠 Build Instructions
+
+make 
+
+👤 Author
+
+Pradeep Munakala
+Feel free to fork, use, and contribute!
+  
+
