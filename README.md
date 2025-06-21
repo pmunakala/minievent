@@ -10,16 +10,16 @@ A lightweight, scalable event timer library in C using **epoll** and a **min-hea
 - Non-blocking event loop with `epoll`
 - Clean and modular C interface
 
+## 📦 Project Structure
 
-## 📁 Project Structure
-event_timer.c       # Timer implementation
-event_timer.h       # Timer interface
-minheap.c           # Min-heap implementation
-minheap.h           # Min-heap interface
-test.c              # Sample usage/test
-README.md           # Project documentation
-
-
+```bash
+.
+├── event_timer.c          # Timer implementation
+├── event_timer.h          # Timer API definitions
+├── minheap.c              # Min-heap implementation
+├── minheap.h              # Heap interface
+├── main.c                 # Sample usage / test
+└── README.md              # Project documentation
 
 ## 🧩 API Usage
 
