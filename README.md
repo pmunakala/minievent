@@ -12,14 +12,14 @@ A lightweight, scalable event timer library in C using **epoll** and a **min-hea
 
 
 ## 📁 Project Structure
-├── event_timer.c       # Timer implementation
-├── event_timer.h       # Timer interface
-├── minheap.c           # Min-heap implementation
-├── minheap.h           # Min-heap interface
-├── main.c              # Sample usage/test
-└── README.md           # Project documentation
+event_timer.c       # Timer implementation
+event_timer.h       # Timer interface
+minheap.c           # Min-heap implementation
+minheap.h           # Min-heap interface
+test.c              # Sample usage/test
+README.md           # Project documentation
 
----
+
 
 ## 🧩 API Usage
 
