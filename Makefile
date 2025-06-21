@@ -4,7 +4,7 @@ CFLAGS := -g -fpic -I./
 SHARED_LIB := timerlib
 DEMO_APP := DemoApp
 BUILD_DIR := $(CURDIR) 
-OBJS := event_timer.o  heap_ds.o
+OBJS := event_timer.o  min_heap.o
 APP_OBJS := test/test_timer.o
 
 %.o: %.c
