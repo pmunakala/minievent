@@ -29,7 +29,6 @@
 #include <sys/epoll.h>
 #include <unistd.h>
 #include <errno.h>
-#include <time.h>
 #include <event_timer.h>
 #include <time.h>
 #include <min_heap.h>
@@ -62,6 +61,16 @@ void add_milliseconds(struct timespec *ts, uint64_t ms) {
     }
 }
 
+int64_t compute_diff_millisecs (struct timespec *ev_ts, struct timespec *now)
+{
+    int64_t sec_diff = ev_ts->tv_sec - now->tv_sec;
+    int64_t nsec_diff = ev_ts->tv_nsec - now->tv_nsec;
+    if (sec_diff < 0 ) sec_diff = 0;
+    if (nsec_diff < 0) nsec_diff = 0;
+    if (!sec_diff &&  !nsec_diff) return 1; 
+    return (sec_diff * 1000) + (nsec_diff / 1000000);
+}
+
 int event_timer_restart (event_timer_watch_t *ev_tm)
 {
     if ((!ev_tm)) {
@@ -71,6 +80,7 @@ int event_timer_restart (event_timer_watch_t *ev_tm)
     clock_gettime(CLOCK_MONOTONIC, &ev_tm->event_ts);
     add_milliseconds(&ev_tm->event_ts, ev_tm->repeat);
     heap_push(heap, ev_tm);
+    return 0;
 }
 
 
@@ -83,9 +93,10 @@ int event_timer_start (event_timer_watch_t *ev_tm)
     clock_gettime(CLOCK_MONOTONIC, &ev_tm->event_ts);
     add_milliseconds(&ev_tm->event_ts, ev_tm->expiry_ms);
     heap_push(heap, ev_tm);
+    return 0;
 }
 
-int timespec_cmp(const struct timespec *a, const struct timespec *b) {
+int timespec_cmp (const struct timespec *a, const struct timespec *b) {
     if (a->tv_sec < b->tv_sec) return -1;
     if (a->tv_sec > b->tv_sec) return 1;
     if (a->tv_nsec < b->tv_nsec) return -1;
@@ -99,7 +110,7 @@ int event_main_loop (void) {
         perror("epoll_create1");
         exit(EXIT_FAILURE);
     }
-    int timeout_ms = 3000;
+    uint64_t timeout_ms = 1000;
     struct epoll_event events[1]; // still need to provide an array
     while(1) {
         int nfds = epoll_wait(poll_fd, events, 1, timeout_ms);
@@ -109,20 +120,22 @@ int event_main_loop (void) {
             exit(EXIT_FAILURE);
         } else if (nfds == 0) {
             if (clock_gettime(CLOCK_MONOTONIC, &global_ts) == 0) {
-                int count = 0;
                 while (!heap_is_empty(heap)) {
                     HeapItem item = heap_peek(heap);
           
                     if (timespec_cmp(&((event_timer_watch_t *)item.data)->event_ts,
-                              &global_ts) >= 0) {
+                              &global_ts) > 0) {
+			timeout_ms = compute_diff_millisecs(&((event_timer_watch_t *)item.data)->event_ts, &global_ts);
+			//printf("Next timeout %ld\n", timeout_ms);
                         break;
                     }
 
-                    ((event_timer_watch_t *)item.data)->timer_cb(item.data);
                     item = heap_pop(heap);
+                    ((event_timer_watch_t *)item.data)->timer_cb(item.data);
                     if (((event_timer_watch_t *)item.data)->repeat > 0) { 
                         event_timer_restart(item.data);
                     } else {
+
                     }
                 }
             }
