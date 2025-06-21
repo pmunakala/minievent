@@ -25,7 +25,7 @@ This project implements a scalable **event timer system** in C using:
 .
 ├── event_timer.c          # Timer implementation
 ├── event_timer.h          # Timer API definitions
-├── minheap.c              # Min-heap implementation
-├── minheap.h              # Heap interface
-├── main.c                 # Sample usage / test
+├── min_heap.c             # Min-heap implementation
+├── min_heap.h             # Heap interface
+├── test/test.c            # Sample usage/test
 └── README.md              # This file
