@@ -23,4 +23,4 @@ $(DEMO_APP): $(SHARED_LIB) $(APP_OBJS)
 
 #clean up
 clean: $(SHARED_LIB)
-	rm -f *.o *.so $(DEMO_APP)
+	rm -f *.o *.so test/*.o $(DEMO_APP)
